@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 import "leaflet/dist/leaflet.css";
-import Map from "./components/Map";
+import Map from "./components/Map/Map";
+import Header from "./components/Header/Header";
 
 function App() {
   const [eventData, setEventData] = useState([]);
@@ -25,6 +26,7 @@ function App() {
 
   return (
     <div className="app">
+      <Header />
       {!loading ? <Map eventData={eventData} /> : <h1>loading...</h1>}
     </div>
   );

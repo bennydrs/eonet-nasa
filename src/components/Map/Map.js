@@ -1,7 +1,8 @@
 import React from "react";
+import "./Map.css";
 import { Map as MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import fire from "../fire.png";
+import fire from "../../assets/fire.png";
 import moment from "moment";
 
 const markerIcon = new L.Icon({
