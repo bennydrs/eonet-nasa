@@ -3,18 +3,28 @@ import "./App.css";
 import "leaflet/dist/leaflet.css";
 import Map from "./components/Map/Map";
 import Header from "./components/Header/Header";
+import { unstable_concurrentAct } from "react-dom/test-utils";
 
 function App() {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(false);
-  console.log(eventData);
+  const [category, setCategory] = useState("all");
+
+  console.log(category);
 
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
-      const res = await fetch(
-        "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/8"
-      );
+      const catId = category;
+
+      const url =
+        catId === "all"
+          ? "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
+          : `https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/${parseFloat(
+              catId
+            )}`;
+
+      const res = await fetch(url);
       const { events } = await res.json();
       setEventData(events);
 
@@ -22,11 +32,12 @@ function App() {
     };
 
     fetchEvents();
-  }, []);
+  }, [category]);
 
   return (
     <div className="app">
-      <Header />
+      <Header category={category} setCategory={setCategory} />
+
       {!loading ? <Map eventData={eventData} /> : <h1>loading...</h1>}
     </div>
   );

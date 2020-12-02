@@ -12,14 +12,20 @@ const markerIcon = new L.Icon({
 
 const Map = ({ eventData, center, zoom }) => {
   const markers = eventData.map((event) => {
+    let position = [];
+    if (event.geometries[0].coordinates.length === 2) {
+      position = [
+        event.geometries[0].coordinates[1],
+        event.geometries[0].coordinates[0],
+      ];
+    } else {
+      event.geometries[0].coordinates[0].slice(0, 1).map((ev) => {
+        position = [ev[1], ev[0]];
+      });
+    }
+    // console.log(position);
     return (
-      <Marker
-        position={[
-          parseFloat(event.geometries[0].coordinates[1]),
-          parseFloat(event.geometries[0].coordinates[0]),
-        ]}
-        icon={markerIcon}
-      >
+      <Marker position={position} icon={markerIcon}>
         <Popup>
           <h3>{event.title}</h3>
           <p>
