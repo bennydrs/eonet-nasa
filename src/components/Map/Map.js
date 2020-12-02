@@ -25,9 +25,9 @@ const Map = ({ eventData, center, zoom }) => {
         position = [ev[1], ev[0]];
       });
     }
-    // console.log(position);
+
     return (
-      <Marker position={position} icon={markerIcon}>
+      <Marker position={position} icon={markerIcon} key={event.id}>
         <Popup>
           <h3>{event.title}</h3>
           <h4>{event.categories[0].title}</h4>

@@ -1,18 +1,28 @@
 import React from "react";
 import "./Header.css";
+import Dropdown from "react-dropdown";
+import "react-dropdown/style.css";
+
+const options = [
+  { value: "all", label: "All" },
+  { value: "8", label: "Wildfires" },
+  { value: "12", label: "Volcanoes" },
+  { value: "15", label: "Sea and Lake Ice" },
+];
 
 const Header = ({ category, setCategory }) => {
   const handleChange = (e) => {
-    setCategory(e.target.value);
+    setCategory(e.value);
   };
   return (
     <header className="header">
       <h1>Eonet</h1>
-      <select value={category} onChange={handleChange}>
-        <option value="all">All</option>
-        <option value="12">Volcanoes</option>
-        <option value="8">Widlfire</option>
-      </select>
+      <Dropdown
+        className="dropdown"
+        options={options}
+        onChange={handleChange}
+        value={category}
+      />
     </header>
   );
 };
