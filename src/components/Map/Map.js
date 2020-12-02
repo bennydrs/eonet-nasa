@@ -2,16 +2,18 @@ import React from "react";
 import "./Map.css";
 import { Map as MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
-import fire from "../../assets/fire.png";
 import moment from "moment";
-
-const markerIcon = new L.Icon({
-  iconUrl: fire,
-  iconSize: [35, 35],
-});
 
 const Map = ({ eventData, center, zoom }) => {
   const markers = eventData.map((event) => {
+    const icon = require(`../../assets/${event.categories[0].title}.png`)
+      .default;
+
+    const markerIcon = new L.Icon({
+      iconUrl: icon,
+      iconSize: [35, 35],
+    });
+
     let position = [];
     if (event.geometries[0].coordinates.length === 2) {
       position = [
@@ -28,6 +30,7 @@ const Map = ({ eventData, center, zoom }) => {
       <Marker position={position} icon={markerIcon}>
         <Popup>
           <h3>{event.title}</h3>
+          <h4>{event.categories[0].title}</h4>
           <p>
             {moment(event.geometries[0].date).format("MMMM Do YYYY, h:mm:ss a")}
           </p>
