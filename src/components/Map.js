@@ -1,26 +1,42 @@
 import React from "react";
 import { Map as MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import L from "leaflet";
+import fire from "../fire.png";
+import moment from "moment";
 
 const markerIcon = new L.Icon({
-  iconUrl:
-    "https://i.pinimg.com/originals/25/62/aa/2562aacd1a4c2af60cce9629b1e05cf2.png",
+  iconUrl: fire,
   iconSize: [35, 35],
 });
 
-const Map = ({ center, zoom }) => {
+const Map = ({ eventData, center, zoom }) => {
+  const markers = eventData.map((event) => {
+    return (
+      <Marker
+        position={[
+          parseFloat(event.geometries[0].coordinates[1]),
+          parseFloat(event.geometries[0].coordinates[0]),
+        ]}
+        icon={markerIcon}
+      >
+        <Popup>
+          <h3>{event.title}</h3>
+          <p>
+            {moment(event.geometries[0].date).format("MMMM Do YYYY, h:mm:ss a")}
+          </p>
+        </Popup>
+      </Marker>
+    );
+  });
+
   return (
     <div className="maps">
-      <MapContainer center={[51.505, -0.09]} zoom={3} className="map">
+      <MapContainer center={center} zoom={zoom} className="map">
         <TileLayer
           attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           url="https://{s}.tile.openstreetmap.de/tiles/osmde/{z}/{x}/{y}.png"
         />
-        <Marker position={[51.505, -0.09]} icon={markerIcon}>
-          <Popup>
-            A pretty CSS3 popup. <br /> Easily customizable.
-          </Popup>
-        </Marker>
+        {markers}
       </MapContainer>
     </div>
   );
