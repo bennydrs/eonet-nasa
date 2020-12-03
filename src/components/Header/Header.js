@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Header.css";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
