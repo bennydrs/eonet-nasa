@@ -8,7 +8,7 @@ import InfoCategory from "./components/InfoCategory/InfoCategory";
 function App() {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [category, setCategory] = useState("all");
+  const [category, setCategory] = useState("All");
   const [dataCategory, setDataCategory] = useState([]);
   const [infoCategoryClose, setInfoCategoryClose] = useState(true);
 
