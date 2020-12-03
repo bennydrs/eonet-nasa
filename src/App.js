@@ -10,8 +10,6 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("all");
 
-  console.log(category);
-
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
@@ -38,7 +36,13 @@ function App() {
     <div className="app">
       <Header category={category} setCategory={setCategory} />
 
-      {!loading ? <Map eventData={eventData} /> : <h1>loading...</h1>}
+      {!loading ? (
+        <Map eventData={eventData} />
+      ) : (
+        <div className="loading">
+          <div class="lds-dual-ring"></div>
+        </div>
+      )}
     </div>
   );
 }

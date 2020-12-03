@@ -1,25 +1,45 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Header.css";
 import Dropdown from "react-dropdown";
 import "react-dropdown/style.css";
 
-const options = [
-  { value: "all", label: "All" },
-  { value: "8", label: "Wildfires" },
-  { value: "12", label: "Volcanoes" },
-  { value: "15", label: "Sea and Lake Ice" },
-];
-
 const Header = ({ category, setCategory }) => {
+  const [dataCategory, setDataCategory] = useState([]);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const res = await fetch(
+        "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories"
+      );
+      const { categories } = await res.json();
+      const cats = categories.map((c) => ({
+        value: c.id.toString(),
+        label: c.title,
+        description: c.description,
+      }));
+      const catAll = [
+        {
+          value: "all",
+          label: "All",
+          description: "",
+        },
+      ];
+      const newCats = catAll.concat(cats);
+      setDataCategory(newCats);
+    };
+
+    fetchCategory();
+  }, []);
+
   const handleChange = (e) => {
     setCategory(e.value);
   };
   return (
     <header className="header">
-      <h1>Eonet</h1>
+      <h1>EONET</h1>
       <Dropdown
         className="dropdown"
-        options={options}
+        options={dataCategory}
         onChange={handleChange}
         value={category}
       />

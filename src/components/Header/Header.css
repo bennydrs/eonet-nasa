@@ -20,4 +20,5 @@
 
 .dropdown {
   width: 25%;
+  min-width: 200px;
 }

@@ -22,7 +22,7 @@ const Map = ({ eventData, center, zoom }) => {
       ];
     } else {
       event.geometries[0].coordinates[0].slice(0, 1).map((ev) => {
-        position = [ev[1], ev[0]];
+        return (position = [ev[1], ev[0]]);
       });
     }
 
