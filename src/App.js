@@ -3,12 +3,14 @@ import "./App.css";
 import "leaflet/dist/leaflet.css";
 import Map from "./components/Map/Map";
 import Header from "./components/Header/Header";
-import { unstable_concurrentAct } from "react-dom/test-utils";
+import InfoCategory from "./components/InfoCategory/InfoCategory";
 
 function App() {
   const [eventData, setEventData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState("all");
+  const [dataCategory, setDataCategory] = useState([]);
+  const [infoCategoryClose, setInfoCategoryClose] = useState(true);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -27,17 +29,56 @@ function App() {
       setEventData(events);
 
       setLoading(false);
+      setInfoCategoryClose(true);
     };
 
     fetchEvents();
   }, [category]);
 
+  useEffect(() => {
+    const fetchCategory = async () => {
+      const res = await fetch(
+        "https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories"
+      );
+      const { categories } = await res.json();
+      const cats = categories.map((c) => ({
+        value: c.id.toString(),
+        label: c.title,
+        description: c.description,
+      }));
+      const catAll = [
+        {
+          value: "all",
+          label: "All",
+          description: "",
+        },
+      ];
+      const newCats = catAll.concat(cats);
+      setDataCategory(newCats);
+    };
+
+    fetchCategory();
+  }, []);
+
   return (
     <div className="app">
-      <Header category={category} setCategory={setCategory} />
-
+      <Header
+        category={category}
+        setCategory={setCategory}
+        dataCategory={dataCategory}
+      />
       {!loading ? (
-        <Map eventData={eventData} />
+        <>
+          {infoCategoryClose ? (
+            <InfoCategory
+              eventData={eventData}
+              category={category}
+              dataCategory={dataCategory}
+              setInfoCategoryClose={setInfoCategoryClose}
+            />
+          ) : null}
+          <Map eventData={eventData} />
+        </>
       ) : (
         <div className="loading">
           <div class="lds-dual-ring"></div>
