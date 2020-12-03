@@ -9,7 +9,12 @@ const Header = ({ category, setCategory, dataCategory }) => {
   };
   return (
     <header className="header">
-      <h1>EONET</h1>
+      <h1 className="header__title">
+        EONET
+        <span>
+          The Earth Observatory Natural Event Tracker (powered by NASA)
+        </span>
+      </h1>
       <Dropdown
         className="dropdown"
         options={dataCategory}
