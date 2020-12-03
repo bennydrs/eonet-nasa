@@ -18,7 +18,7 @@ function App() {
       const catId = category;
 
       const url =
-        catId === "all"
+        catId === "All"
           ? "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
           : `https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/${parseFloat(
               catId
@@ -48,7 +48,7 @@ function App() {
       }));
       const catAll = [
         {
-          value: "all",
+          value: "All",
           label: "All",
           description: "",
         },
@@ -81,7 +81,7 @@ function App() {
         </>
       ) : (
         <div className="loading">
-          <div class="lds-dual-ring"></div>
+          <div className="lds-dual-ring"></div>
         </div>
       )}
     </div>
