@@ -5,6 +5,7 @@ import "react-dropdown/style.css"
 
 const Header = ({ category, setCategory, dataCategory, loading }) => {
   const handleChange = (e) => {
+    console.log(e.value)
     setCategory(e.value)
   }
   return (

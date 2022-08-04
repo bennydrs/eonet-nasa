@@ -5,29 +5,35 @@ import Map from "./components/Map/Map"
 import Header from "./components/Header/Header"
 import InfoCategory from "./components/InfoCategory/InfoCategory"
 
+const baseUrl = "https://eonet.gsfc.nasa.gov/api/v3"
+
 function App() {
   const [eventData, setEventData] = useState([])
   const [loading, setLoading] = useState(false)
   const [category, setCategory] = useState("All")
   const [dataCategory, setDataCategory] = useState([])
   const [infoCategoryClose, setInfoCategoryClose] = useState(true)
+  const [error, setError] = useState()
 
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true)
-      const catId = category
+      try {
+        const categoryId = category
+        const url =
+          categoryId === "All" ? `${baseUrl}/events` : `${baseUrl}/categories/${categoryId}`
 
-      const url =
-        catId === "All"
-          ? "https://eonet.sci.gsfc.nasa.gov/api/v2.1/events"
-          : `https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories/${parseFloat(catId)}`
+        const res = await fetch(url)
+        const { events } = await res.json()
+        setEventData(events)
 
-      const res = await fetch(url)
-      const { events } = await res.json()
-      setEventData(events)
-
-      setLoading(false)
-      setInfoCategoryClose(true)
+        setInfoCategoryClose(true)
+      } catch (err) {
+        console.log(err)
+        setError("Something went wrong")
+      } finally {
+        setLoading(false)
+      }
     }
 
     fetchEvents()
@@ -35,22 +41,27 @@ function App() {
 
   useEffect(() => {
     const fetchCategory = async () => {
-      const res = await fetch("https://eonet.sci.gsfc.nasa.gov/api/v2.1/categories")
-      const { categories } = await res.json()
-      const cats = categories.map((c) => ({
-        value: c.id.toString(),
-        label: c.title,
-        description: c.description,
-      }))
-      const catAll = [
-        {
-          value: "All",
-          label: "All",
-          description: "",
-        },
-      ]
-      const newCats = catAll.concat(cats)
-      setDataCategory(newCats)
+      try {
+        const res = await fetch(`${baseUrl}/categories`)
+        const { categories } = await res.json()
+
+        const cats = categories.map((c) => ({
+          value: c.id.toString(),
+          label: c.title,
+          description: c.description,
+        }))
+        const catAll = [
+          {
+            value: "All",
+            label: "All",
+            description: "",
+          },
+        ]
+        const newCats = catAll.concat(cats)
+        setDataCategory(newCats)
+      } catch (err) {
+        console.log(err)
+      }
     }
 
     fetchCategory()
@@ -65,16 +76,20 @@ function App() {
         loading={loading}
       />
 
-      <>
-        <InfoCategory
-          eventData={eventData}
-          category={category}
-          dataCategory={dataCategory}
-          setInfoCategoryClose={setInfoCategoryClose}
-          infoCategoryClose={infoCategoryClose}
-        />
-        <Map eventData={eventData} />
-      </>
+      {error ? (
+        error
+      ) : (
+        <>
+          <InfoCategory
+            eventData={eventData}
+            category={category}
+            dataCategory={dataCategory}
+            setInfoCategoryClose={setInfoCategoryClose}
+            infoCategoryClose={infoCategoryClose}
+          />
+          <Map eventData={eventData} />
+        </>
+      )}
 
       {loading && (
         <div className="loading">
